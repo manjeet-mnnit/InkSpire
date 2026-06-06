@@ -14,6 +14,10 @@ const PRESET_COLORS = [
 	"#f43f5e"
 ];
 
+const BASE_WIDTH = 800;
+const ASPECT_RATIO = 0.58;
+const BASE_HEIGHT = BASE_WIDTH * ASPECT_RATIO;
+
 const SHAPE_TOOLS = ["line", "rectangle", "circle"];
 
 function resolvePointer(canvas, event) {
@@ -73,6 +77,29 @@ export default function DrawingBoard({ socket, gameState, onError }) {
 		if (!message || typeof onError !== "function") return;
 		onError(message);
 	}, [onError]);
+
+    const syncCanvasLayout = useCallback(() => {
+        const canvas = fabricCanvasRef.current;
+        const container = canvasContainerRef.current;
+        if (!canvas || !container) return;
+
+        const styles = window.getComputedStyle(container);
+        const horizontalPadding =
+            (parseFloat(styles.paddingLeft || "0") || 0) +
+            (parseFloat(styles.paddingRight || "0") || 0);
+
+        const availableWidth = Math.max(0, container.clientWidth - horizontalPadding);
+        const physicalWidth = Math.max(320, Math.floor(availableWidth));
+        
+        const zoomScale = physicalWidth / BASE_WIDTH;
+        const physicalHeight = BASE_HEIGHT * zoomScale;
+
+        lastCanvasSizeRef.current = { width: physicalWidth, height: physicalHeight };
+
+        canvas.setDimensions({ width: physicalWidth, height: physicalHeight });
+        canvas.setZoom(zoomScale);
+        canvas.renderAll();
+    }, []);
 
 	const updateHistoryFlags = useCallback(() => {
 		const index = historyIndexRef.current;
@@ -196,6 +223,8 @@ export default function DrawingBoard({ socket, gameState, onError }) {
 			if (loadResult && typeof loadResult.then === "function") {
 				await loadResult;
 			}
+
+            syncCanvasLayout();
 			canvas.forEachObject((obj) => {
 				obj.selectable = false;
 				obj.evented = false;
@@ -206,7 +235,7 @@ export default function DrawingBoard({ socket, gameState, onError }) {
 		} finally {
 			isApplyingRemoteRef.current = false;
 		}
-	}, [reportError]);
+	}, [reportError, syncCanvasLayout]);
 
 	useEffect(() => {
 		if (!canvasElementRef.current) return undefined;
@@ -221,37 +250,11 @@ export default function DrawingBoard({ socket, gameState, onError }) {
 
 		fabricCanvasRef.current = instance;
 
-		const resizeCanvas = () => {
-			const container = canvasContainerRef.current;
-			if (!container) return;
-
-			const styles = window.getComputedStyle(container);
-			const horizontalPadding =
-				(parseFloat(styles.paddingLeft || "0") || 0) +
-				(parseFloat(styles.paddingRight || "0") || 0);
-
-			const availableWidth = Math.max(0, container.clientWidth - horizontalPadding);
-			const width = Math.max(320, Math.floor(availableWidth));
-			const height = Math.max(220, Math.floor(width * 0.58));
-
-			if (
-				lastCanvasSizeRef.current.width === width &&
-				lastCanvasSizeRef.current.height === height
-			) {
-				return;
-			}
-
-			lastCanvasSizeRef.current = { width, height };
-
-			instance.setDimensions({ width, height });
-			instance.renderAll();
-		};
-
-		resizeCanvas();
+		syncCanvasLayout();
 		saveHistorySnapshot(instance, { reset: true });
 
 		const resizeObserver = new ResizeObserver(() => {
-			resizeCanvas();
+			syncCanvasLayout();
 		});
 
 		if (canvasContainerRef.current) {
@@ -266,7 +269,7 @@ export default function DrawingBoard({ socket, gameState, onError }) {
 			instance.dispose();
 			fabricCanvasRef.current = null;
 		};
-	}, [saveHistorySnapshot]);
+	}, [saveHistorySnapshot, syncCanvasLayout]);
 
 	useEffect(() => {
 		const canvas = fabricCanvasRef.current;
@@ -616,6 +619,8 @@ export default function DrawingBoard({ socket, gameState, onError }) {
 					}
 				}
 
+                syncCanvasLayout();
+
 				canvas.forEachObject((obj) => {
 					obj.selectable = false;
 					obj.evented = false;
@@ -652,7 +657,7 @@ export default function DrawingBoard({ socket, gameState, onError }) {
 		return () => {
 			socket.off("game:canvasState", handleCanvasState);
 		};
-	}, [socket, reportError, saveHistorySnapshot, canDraw]);
+	}, [socket, reportError, saveHistorySnapshot, canDraw, syncCanvasLayout]);
 
 	function handleClearCanvas() {
 		if (!socket || !canDraw) return;
