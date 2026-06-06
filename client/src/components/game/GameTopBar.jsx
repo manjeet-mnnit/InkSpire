@@ -1,7 +1,17 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGame } from "../../context/GameContext.jsx";
 import { useLobby } from "../../context/LobbyContext.jsx";
+
+function getVisibleTimerSec(gameState) {
+  if (!gameState) return null;
+
+  if (gameState.status === "presenter-choosing") {
+    return gameState.presenterChoiceRemainingSec ?? null;
+  }
+
+  return gameState.timeRemainingSec ?? null;
+}
 
 function buildWordHint(gameState, hintState) {
   if (!gameState) return "_ _ _ _";
@@ -20,8 +30,27 @@ export default function GameTopBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSoundOn, setIsSoundOn] = useState(true);
   const [isLeavingRoom, setIsLeavingRoom] = useState(false);
+  const [visibleTimerSec, setVisibleTimerSec] = useState(null);
 
   const wordHint = useMemo(() => buildWordHint(gameState, hintState), [gameState, hintState]);
+
+  useEffect(() => {
+    const nextTimerSec = getVisibleTimerSec(gameState);
+    setVisibleTimerSec(nextTimerSec);
+
+    if (nextTimerSec === null) {
+      return undefined;
+    }
+
+    const timerId = window.setInterval(() => {
+      setVisibleTimerSec((current) => {
+        if (current === null || current <= 0) return current;
+        return current - 1;
+      });
+    }, 1000);
+
+    return () => window.clearInterval(timerId);
+  }, [gameState?.status, gameState?.timeRemainingSec, gameState?.presenterChoiceRemainingSec]);
 
   async function handleLeaveRoom() {
     if (isLeavingRoom) return;
@@ -45,8 +74,8 @@ export default function GameTopBar() {
       <div className="game-topbar-row">
         <div className="game-clock-block">
           <strong className="game-clock-value">
-            {gameState?.timeRemainingSec !== null && gameState?.timeRemainingSec !== undefined
-              ? `${gameState.timeRemainingSec}s`
+            {visibleTimerSec !== null && visibleTimerSec !== undefined
+              ? `${visibleTimerSec}s`
               : "--"}
           </strong>
         </div>
