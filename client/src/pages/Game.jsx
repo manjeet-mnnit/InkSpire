@@ -21,7 +21,6 @@ function GameLayoutContent() {
   const { gameState, isGameOver } = useGame();
   const { lobbyState, lastGameState } = useLobby();
   const navigate = useNavigate();
-  const shouldShowWordCard = gameState?.status === "presenter-choosing";
   const resolvedStatus = gameState?.status || lastGameState?.status || null;
   const [isPlayersDrawerOpen, setIsPlayersDrawerOpen] = useState(false);
 
@@ -47,7 +46,6 @@ function GameLayoutContent() {
 
         <section className="game-center">
           <GameCanvasCard />
-          {shouldShowWordCard ? <GameWordCard /> : null}
         </section>
 
         <aside className="game-right">
@@ -77,6 +75,7 @@ function GameLayoutContent() {
         </div>
       ) : null}
 
+      <GameWordCard />
       {isGameOver ? <GameOverOverlay /> : null}
     </div>
   );
