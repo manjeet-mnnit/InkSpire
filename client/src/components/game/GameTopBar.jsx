@@ -137,10 +137,6 @@ export default function GameTopBar({ onOpenPlayers }) {
         </div>
       </div>
 
-      {presenterTimeoutNotice ? (
-        <div className="note">Presenter timed out. A word was auto-selected.</div>
-      ) : null}
-      {wordReveal?.word ? <div className="note">Word revealed: {wordReveal.word}</div> : null}
       {gameError ? <div className="error">{gameError}</div> : null}
     </section>
   );

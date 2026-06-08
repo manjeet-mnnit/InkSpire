@@ -15,9 +15,7 @@ function getChatEntryClass(entry) {
 export default function GameGuessCard() {
   const { gameState, canGuess, submitGuess, chatFeed, sendChatMessage } = useGame();
   const [messageInput, setMessageInput] = useState("");
-  const [guessResult, setGuessResult] = useState(null);
   const chatScrollRef = useRef(null);
-  const visibleGuessResult = gameState?.reason && gameState.reason !== "tick" ? null : guessResult;
 
   useEffect(() => {
     if (!chatScrollRef.current) return;
@@ -54,12 +52,6 @@ export default function GameGuessCard() {
       const result = await submitGuess(messageInput);
       if (result?.ok === false) return;
 
-      if (result?.correct) {
-        setGuessResult("Correct!");
-      } else {
-        setGuessResult("Not quite.");
-      }
-
       setMessageInput("");
       return;
     }
@@ -68,7 +60,6 @@ export default function GameGuessCard() {
     if (result?.ok === false) return;
 
     setMessageInput("");
-    setGuessResult(null);
   }
 
   return (
@@ -84,7 +75,7 @@ export default function GameGuessCard() {
                   <span>{entry.message}</span>
                 ) : (
                   <>
-                    <strong className="game-chat-author">{entry.name || "Player"}</strong>
+                    <strong className="game-chat-author">{(entry.name || "Player").split(" ")[0]}: </strong>
                     <span className="game-chat-message">{entry.message}</span>
                   </>
                 )}
@@ -96,21 +87,19 @@ export default function GameGuessCard() {
         )}
       </div>
 
-      {visibleGuessResult ? <div className="note">{visibleGuessResult}</div> : null}
+      {/* {visibleGuessResult ? <div className="note">{visibleGuessResult}</div> : null} */}
 
       <form className="game-chat-input-row" onSubmit={handleSubmit}>
         <input
           value={messageInput}
           onChange={(event) => {
             setMessageInput(event.target.value);
-            if (isRoundActive) {
-              setGuessResult(null);
-            }
           }}
           placeholder={inputPlaceholder}
           disabled={isInputDisabled}
+          hidden={isInputDisabled}
         />
-        <button type="submit" disabled={isInputDisabled || !messageInput.trim()}>
+        <button type="submit" hidden={isInputDisabled} disabled={isInputDisabled || !messageInput.trim()}>
           {isRoundActive ? "Guess" : "Send"}
         </button>
       </form>

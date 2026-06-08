@@ -1088,12 +1088,11 @@ button:disabled {
 }
 
 .game-chat-entry {
-  display: grid;
-  gap: 2px;
-  border-radius: 10px;
-  padding: 9px 10px;
+  border-radius: 8px;
+  padding: 6px 8px;
   border: 1px solid hsl(250 17% 28% / 0.7);
   background: hsl(247 24% 11% / 0.68);
+  font-size: 0.85rem;
 }
 
 .game-chat-entry.is-guess {
@@ -1119,7 +1118,6 @@ button:disabled {
 }
 
 .game-chat-author {
-  font-size: 0.93rem;
   color: hsl(280 72% 72%);
 }
 
@@ -1463,6 +1461,7 @@ button:disabled {
 
   .game-layout {
     grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
     min-height: 0;
   }
 
@@ -1471,23 +1470,24 @@ button:disabled {
   }
 
   .game-right {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 25;
+    position: relative;
     width: 100%;
-    height: auto;
+    height: 100%;
     min-height: 0;
     max-height: none;
   }
 
   .game-chat-panel {
     min-height: 0;
+    height: 100%;
     padding: 8px;
     display: grid;
-    grid-template-rows: minmax(0, auto) auto auto;
+    grid-template-rows: minmax(0, 1fr) auto auto;
     gap: 6px;
+  }
+
+  .game-chat-list {
+    gap: 4px;
   }
 
   .game-chat-panel h2 {
@@ -1495,8 +1495,8 @@ button:disabled {
   }
 
   .game-chat-scroll {
-    height: auto;
-    max-height: 90px;
+    height: 100%;
+    max-height: none;
     overflow-y: auto;
     margin-bottom: 0;
     padding-right: 4px;
