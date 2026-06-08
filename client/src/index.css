@@ -474,7 +474,7 @@ button:disabled {
   width: 100%;
 }
 
-.landing-state-wrap > .card {
+.landing-state-wrap>.card {
   margin: 0;
   min-height: var(--landing-panel-min-height);
   display: grid;
@@ -817,9 +817,9 @@ button:disabled {
   height: 100%;
 }
 
-.game-scoreboard-card > h2,
-.game-canvas-card > h2,
-.game-chat-panel > h2 {
+.game-scoreboard-card>h2,
+.game-canvas-card>h2,
+.game-chat-panel>h2 {
   margin-bottom: 14px;
 }
 
@@ -983,19 +983,16 @@ button:disabled {
   display: flex;
   flex: 0 0 auto;
   flex-wrap: wrap;
-  justify-content: center;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   border: 1px solid hsl(250 16% 28% / 0.95);
   background:
     linear-gradient(135deg, hsl(250 22% 14% / 0.8) 0%, hsl(246 28% 10% / 0.9) 100%),
-    repeating-linear-gradient(
-      -45deg,
+    repeating-linear-gradient(-45deg,
       hsl(270 80% 65% / 0.08) 0,
       hsl(270 80% 65% / 0.08) 8px,
       transparent 8px,
-      transparent 16px
-    );
+      transparent 16px);
   box-shadow: var(--shadow-soft), 0 0 34px hsl(270 80% 65% / 0.18);
   padding: 12px;
 }
@@ -1003,7 +1000,6 @@ button:disabled {
 .palette-grid {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
   gap: 6px;
 }
 
@@ -1018,6 +1014,7 @@ button:disabled {
   display: grid;
   place-items: center;
   padding: 0;
+  flex-shrink: 0;
 }
 
 .palette-btn:hover {
@@ -1049,20 +1046,16 @@ button:disabled {
 
 .palette-color-block {
   display: flex;
-  flex: 0 0 auto;
   flex-wrap: wrap;
-  justify-content: center;
   gap: 8px;
   align-items: center;
 }
 
 .palette-controls-row {
   display: flex;
-  flex: 0 0 auto;
   flex-wrap: wrap;
-  justify-content: center;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .color-tile {
@@ -1089,12 +1082,10 @@ button:disabled {
 }
 
 .size-dots {
-  flex: 0 0 auto;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   align-items: center;
-  justify-content: center;
 }
 
 .size-dot {
@@ -1124,10 +1115,8 @@ button:disabled {
 
 .color-presets {
   display: flex;
-  flex: 0 0 auto;
-  gap: 6px;
   flex-wrap: wrap;
-  justify-content: center;
+  gap: 6px;
   padding-bottom: 3px;
 }
 
@@ -1204,22 +1193,26 @@ button:disabled {
 }
 
 @keyframes float {
+
   0%,
   100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-12px);
   }
 }
 
 @keyframes pulse {
+
   0%,
   100% {
     box-shadow:
       0 0 12px hsl(270 80% 65% / 0.2),
       0 0 24px hsl(330 80% 65% / 0.1);
   }
+
   50% {
     box-shadow:
       0 0 22px hsl(270 80% 65% / 0.38),
@@ -1232,6 +1225,7 @@ button:disabled {
     opacity: 0;
     transform: translateY(30px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);
@@ -1239,13 +1233,16 @@ button:disabled {
 }
 
 @keyframes blob {
+
   0%,
   100% {
     transform: translate3d(0, 0, 0) scale(1);
   }
+
   33% {
     transform: translate3d(24px, -18px, 0) scale(1.04);
   }
+
   66% {
     transform: translate3d(-20px, 24px, 0) scale(0.97);
   }
@@ -1257,11 +1254,13 @@ button:disabled {
     transform: translateY(-22px) scale(0.97);
     filter: blur(6px);
   }
+
   65% {
     opacity: 1;
     transform: translateY(4px) scale(1.01);
     filter: blur(0);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -1274,6 +1273,7 @@ button:disabled {
     opacity: 0;
     transform: translateY(18px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -1290,7 +1290,7 @@ button:disabled {
   }
 
   .landing-hero,
-  .landing-state-wrap > .card {
+  .landing-state-wrap>.card {
     min-height: auto;
   }
 
@@ -1393,8 +1393,8 @@ button:disabled {
     gap: 0;
   }
 
-  .game-topbar > .note,
-  .game-topbar > .error,
+  .game-topbar>.note,
+  .game-topbar>.error,
   .game-round-value {
     display: none;
   }
@@ -1494,6 +1494,69 @@ button:disabled {
   .game-overlay-actions button {
     width: 100%;
   }
+
+  .drawing-toolbar {
+    gap: 6px;
+    padding: 8px;
+  }
+
+  .palette-grid {
+    gap: 4px;
+  }
+
+  .palette-btn {
+    flex: 0 0 32px;
+    width: 32px;
+    min-height: 32px;
+    border-radius: 8px;
+  }
+
+  .palette-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .palette-controls-row {
+    gap: 6px;
+  }
+
+  .palette-color-block {
+    gap: 6px;
+  }
+
+  .color-tile {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+  }
+
+  .color-presets {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 0;
+  }
+
+  .color-presets::-webkit-scrollbar {
+    display: none;
+  }
+
+  .swatch {
+    flex: 0 0 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  .size-dots {
+    gap: 4px;
+  }
+
+  .size-dot {
+    flex: 0 0 24px;
+    width: 24px;
+    height: 24px;
+  }
 }
 
 @media (max-width: 800px) {
@@ -1531,6 +1594,7 @@ button:disabled {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {

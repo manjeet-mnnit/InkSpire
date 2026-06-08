@@ -823,7 +823,9 @@ export default function DrawingBoard({ socket, gameState, onError }) {
 										className={brushColor === color ? "swatch active" : "swatch"}
 										style={{ "--swatch": color }}
 										onClick={() => {
-											setToolMode("draw");
+											if(toolMode === "erase") {
+												setToolMode("draw");
+											}
 											setBrushColor(color);
 										}}
 										aria-label={`Use color ${color}`}
