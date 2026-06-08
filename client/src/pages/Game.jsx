@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GameProvider } from "../context/GameContext.jsx";
 import { useGame } from "../context/GameContext.jsx";
@@ -23,6 +23,7 @@ function GameLayoutContent() {
   const navigate = useNavigate();
   const shouldShowWordCard = gameState?.status === "presenter-choosing";
   const resolvedStatus = gameState?.status || lastGameState?.status || null;
+  const [isPlayersDrawerOpen, setIsPlayersDrawerOpen] = useState(false);
 
   useEffect(() => {
     if (!lobbyState?.id) {
@@ -37,7 +38,7 @@ function GameLayoutContent() {
 
   return (
     <div className="game-page">
-      <GameTopBar />
+      <GameTopBar onOpenPlayers={() => setIsPlayersDrawerOpen(true)} />
 
       <div className="game-layout">
         <aside className="game-left">
@@ -53,6 +54,28 @@ function GameLayoutContent() {
           <GameGuessCard />
         </aside>
       </div>
+
+      {isPlayersDrawerOpen ? (
+        <div className="players-drawer-root" role="dialog" aria-modal="true" aria-label="Players">
+          <button
+            type="button"
+            className="players-drawer-backdrop"
+            onClick={() => setIsPlayersDrawerOpen(false)}
+            aria-label="Close players"
+          />
+          <div className="players-drawer-panel">
+            <button
+              type="button"
+              className="secondary players-drawer-close"
+              onClick={() => setIsPlayersDrawerOpen(false)}
+              aria-label="Close players"
+            >
+              X
+            </button>
+            <GameScoreboardCard />
+          </div>
+        </div>
+      ) : null}
 
       {isGameOver ? <GameOverOverlay /> : null}
     </div>

@@ -28,7 +28,7 @@
 html,
 body,
 #root {
-  min-height: 100%;
+  height: 100dvh;
 }
 
 body {
@@ -73,7 +73,7 @@ pre {
 }
 
 .app-main {
-  min-height: 100vh;
+  height: 100dvh;
   position: relative;
   isolation: isolate;
 }
@@ -545,11 +545,13 @@ button:disabled {
 
 .game-page {
   width: calc(100% - clamp(10px, 1.4vw, 22px));
-  min-height: 100dvh;
+  height: 100dvh;
   margin-inline: auto;
   padding: 10px 0 14px;
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 10px;
+  overflow: hidden;
 }
 
 .game-layout {
@@ -557,7 +559,9 @@ button:disabled {
   grid-template-columns: minmax(190px, 0.9fr) minmax(0, 2.6fr) minmax(220px, 1.1fr);
   gap: 10px;
   align-items: stretch;
-  min-height: calc(100dvh - 116px);
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
   position: relative;
   z-index: 1;
 }
@@ -566,6 +570,7 @@ button:disabled {
 .game-center,
 .game-right {
   min-width: 0;
+  min-height: 0;
   display: grid;
   gap: 10px;
 }
@@ -578,6 +583,7 @@ button:disabled {
 
 .game-center {
   grid-template-rows: 1fr auto;
+  overflow: hidden;
 }
 
 .game-canvas-card {
@@ -651,6 +657,20 @@ button:disabled {
   min-height: 40px;
   width: 42px;
   padding: 0;
+}
+
+.game-players-btn {
+  display: none;
+  min-height: 40px;
+  width: 42px;
+  padding: 0;
+  place-items: center;
+}
+
+.game-players-btn svg {
+  width: 18px;
+  height: 18px;
+  display: block;
 }
 
 .game-menu-popover {
@@ -897,6 +917,10 @@ button:disabled {
   gap: 10px;
 }
 
+.players-drawer-root {
+  display: none;
+}
+
 .game-chat-list {
   gap: 8px;
 }
@@ -956,8 +980,12 @@ button:disabled {
 }
 
 .drawing-toolbar {
-  display: grid;
-  gap: 8px;
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
   border: 1px solid hsl(250 16% 28% / 0.95);
   background:
     linear-gradient(135deg, hsl(250 22% 14% / 0.8) 0%, hsl(246 28% 10% / 0.9) 100%),
@@ -969,16 +997,19 @@ button:disabled {
       transparent 16px
     );
   box-shadow: var(--shadow-soft), 0 0 34px hsl(270 80% 65% / 0.18);
-  padding: 10px 12px;
+  padding: 12px;
 }
 
 .palette-grid {
-  display: grid;
-  grid-template-columns: repeat(8, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 6px;
 }
 
 .palette-btn {
+  flex: 0 0 40px;
+  width: 40px;
   min-height: 40px;
   border-radius: 10px;
   border: 1px solid hsl(250 14% 32% / 0.9);
@@ -1017,17 +1048,21 @@ button:disabled {
 }
 
 .palette-color-block {
-  display: grid;
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 8px;
-  grid-template-columns: auto 1fr;
   align-items: center;
 }
 
 .palette-controls-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .color-tile {
@@ -1049,17 +1084,21 @@ button:disabled {
 }
 
 .palette-colors {
+  flex: 0 0 auto;
   padding-bottom: 0;
 }
 
 .size-dots {
+  flex: 0 0 auto;
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
 }
 
 .size-dot {
+  flex: 0 0 30px;
   width: 30px;
   height: 30px;
   border-radius: 999px;
@@ -1085,12 +1124,15 @@ button:disabled {
 
 .color-presets {
   display: flex;
+  flex: 0 0 auto;
   gap: 6px;
   flex-wrap: wrap;
+  justify-content: center;
   padding-bottom: 3px;
 }
 
 .swatch {
+  flex: 0 0 22px;
   width: 22px;
   height: 22px;
   border-radius: 999px;
@@ -1121,12 +1163,15 @@ button:disabled {
 
 .canvas-frame {
   position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
   border: 1px solid hsl(250 14% 35% / 0.95);
   border-radius: 16px;
   background:
     radial-gradient(circle at 16% 12%, hsl(220 20% 98%) 0%, hsl(220 19% 96%) 56%, hsl(220 18% 90%) 100%);
   padding: 10px;
   overflow: hidden;
+  touch-action: none;
   box-shadow: 0 10px 40px hsl(250 80% 2% / 0.42);
 }
 
@@ -1224,6 +1269,17 @@ button:disabled {
   }
 }
 
+@keyframes drawer-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (max-width: 980px) {
   .row {
     grid-template-columns: 1fr;
@@ -1245,30 +1301,175 @@ button:disabled {
 
   .game-layout {
     grid-template-columns: 1fr;
-    min-height: auto;
+    min-height: 0;
+  }
+
+  .game-left {
+    display: none;
   }
 
   .game-right {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 25;
+    width: 100%;
+    height: auto;
+    min-height: 0;
     max-height: none;
   }
 
+  .game-chat-panel {
+    min-height: 0;
+    padding: 8px;
+    display: grid;
+    grid-template-rows: minmax(0, auto) auto auto;
+    gap: 6px;
+  }
+
+  .game-chat-panel h2 {
+    display: none;
+  }
+
+  .game-chat-scroll {
+    height: auto;
+    max-height: 90px;
+    overflow-y: auto;
+    margin-bottom: 0;
+    padding-right: 4px;
+  }
+
+  .game-chat-entry {
+    padding: 6px 8px;
+  }
+
+  .game-chat-input-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 6px;
+  }
+
+  .game-chat-input-row input,
+  .game-chat-input-row button {
+    min-height: 38px;
+  }
+
   .game-topbar-row {
-    grid-template-columns: 1fr;
-    gap: 10px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
   }
 
   .game-clock-block,
   .game-round-block {
-    justify-content: flex-start;
+    flex: 0 0 auto;
+    justify-content: center;
+    min-height: 0;
   }
 
   .game-hint-block {
-    justify-content: flex-start;
-    text-align: left;
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+    justify-content: center;
+    text-align: center;
   }
 
   .game-hint-value {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     letter-spacing: 0.18em;
+  }
+
+  .game-topbar {
+    flex: 0 0 50px;
+    height: 50px;
+    min-height: 50px;
+    padding: 4px 8px;
+    gap: 0;
+  }
+
+  .game-topbar > .note,
+  .game-topbar > .error,
+  .game-round-value {
+    display: none;
+  }
+
+  .game-clock-value {
+    font-size: 1.25rem;
+  }
+
+  .game-round-block {
+    gap: 0;
+  }
+
+  .game-players-btn {
+    display: grid;
+    min-height: 38px;
+    width: 38px;
+  }
+
+  .game-menu-btn {
+    min-height: 38px;
+    width: 38px;
+  }
+
+  .players-drawer-root {
+    position: fixed;
+    inset: 0;
+    z-index: 210;
+    display: grid;
+    place-items: end stretch;
+    pointer-events: none;
+  }
+
+  .players-drawer-backdrop {
+    position: absolute;
+    inset: 0;
+    min-height: 0;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: hsl(246 32% 5% / 0.45);
+    pointer-events: auto;
+  }
+
+  .players-drawer-backdrop:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .players-drawer-panel {
+    position: relative;
+    z-index: 1;
+    width: min(360px, calc(100% - 18px));
+    max-height: min(70dvh, 520px);
+    margin: 0 9px 9px auto;
+    overflow-y: auto;
+    pointer-events: auto;
+    animation: drawer-slide-up 180ms ease-out both;
+  }
+
+  .players-drawer-panel .game-scoreboard-card {
+    height: auto;
+    max-height: inherit;
+    overflow-y: auto;
+    padding-top: 46px;
+  }
+
+  .players-drawer-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 2;
+    width: 34px;
+    min-height: 34px;
+    padding: 0;
   }
 
   .game-overlay-panel {
@@ -1300,25 +1501,13 @@ button:disabled {
     width: min(var(--container-6xl), calc(100% - 1.25rem));
   }
 
-  .palette-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
-  .palette-color-block {
-    grid-template-columns: 1fr;
-  }
-
-  .palette-controls-row {
-    grid-template-columns: 1fr;
-  }
-
   .size-dots {
     justify-content: flex-start;
   }
 
   .color-tile {
-    width: 100%;
-    max-width: 80px;
+    width: 40px;
+    max-width: none;
   }
 
   .drawing-controls-row {

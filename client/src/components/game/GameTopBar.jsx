@@ -23,7 +23,7 @@ function buildWordHint(gameState, hintState) {
   return "_ _ _ _";
 }
 
-export default function GameTopBar() {
+export default function GameTopBar({ onOpenPlayers }) {
   const { gameState, hintState, gameError, presenterTimeoutNotice, wordReveal, setGameError } = useGame();
   const { leaveLobby } = useLobby();
   const navigate = useNavigate();
@@ -88,6 +88,21 @@ export default function GameTopBar() {
           <span className="game-round-value">
             Round {gameState?.round ?? 0}/{gameState?.settings?.maxRounds ?? "-"}
           </span>
+
+          <button
+            type="button"
+            className="secondary game-players-btn"
+            onClick={onOpenPlayers}
+            aria-label="Open players"
+            title="Players"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M16 11a4 4 0 1 0-8 0" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              <path d="M4 21a8 8 0 0 1 16 0" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              <path d="M18 8.5a3 3 0 0 1 2 5.2" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              <path d="M21 21a5.5 5.5 0 0 0-3-4.9" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+          </button>
 
           <div className="game-menu-wrap">
             <button
